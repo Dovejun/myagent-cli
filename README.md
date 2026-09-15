@@ -213,31 +213,6 @@ ai-agent-cli/
     └── test_webui.py
 ```
 
-## 综合实战（D6）
-
-五方面能力已集中装配进 `config.py`，配置分三层（CLI 参数最简）：
-
-| 层 | 内容 | 说明 |
-|---|---|---|
-| CLI 参数 | 行为开关 | 见 `agent_cli.py --help`（审批/记忆/流式/会话/钩子） |
-| `.env` | LLM、知识库路径、embedding 源、MCP 配置路径 | 默认即"生产可用" |
-| 代码 | `AgentConfig` | 测试/嵌入程序可编程覆盖 |
-
-```python
-from config import AgentConfig, build_agent
-
-config = AgentConfig(
-    max_steps=15, approval=True, retry_times=3,
-    enable_memory=True, task_memory_budget=1500, window_rounds=10,
-    hooks=("pytest",),            # 写文件后自动跑测试
-    knowledge_enabled=True,       # 知识检索默认开
-    mcp_config_path="mcp_servers.json",
-)
-agent = build_agent(config)       # 测试/嵌入程序同此入口
-```
-
-端到端演示（含预期流程与组件对照）：见 `docs/demo.md`。
-
 ## 配置（.env 与 mcp_servers.json）
 
 开箱即用只需 `.env` 填 LLM 三件套；其余全默认（知识检索默认开启）。
@@ -400,6 +375,31 @@ MCP servers 用 JSON 配置（**放好即加载，零参数**）——复制
   （把错误从运行时提前到装配时）。`ToolRegistry(validate_contracts=False)` 可关。
 - **回归测试**：`pytest tests/ -v` 覆盖全部 D2-D5 能力（审批/重试/依赖/
   契约/审计/钩子/窗口），全部离线可跑，不依赖真实 API。
+
+## 综合实战（D6）
+
+五方面能力已集中装配进 `config.py`，配置分三层（CLI 参数最简）：
+
+| 层 | 内容 | 说明 |
+|---|---|---|
+| CLI 参数 | 行为开关 | 见 `agent_cli.py --help`（审批/记忆/流式/会话/钩子） |
+| `.env` | LLM、知识库路径、embedding 源、MCP 配置路径 | 默认即"生产可用" |
+| 代码 | `AgentConfig` | 测试/嵌入程序可编程覆盖 |
+
+```python
+from config import AgentConfig, build_agent
+
+config = AgentConfig(
+    max_steps=15, approval=True, retry_times=3,
+    enable_memory=True, task_memory_budget=1500, window_rounds=10,
+    hooks=("pytest",),            # 写文件后自动跑测试
+    knowledge_enabled=True,       # 知识检索默认开
+    mcp_config_path="mcp_servers.json",
+)
+agent = build_agent(config)       # 测试/嵌入程序同此入口
+```
+
+端到端演示（含预期流程与组件对照）：见 `docs/demo.md`。
 
 ## 复盘与模板（D7）
 
