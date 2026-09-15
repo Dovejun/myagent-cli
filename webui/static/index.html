@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Agent CLI · Web UI</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot" id="conn-dot" title="连接状态"></span>
+      <span class="title">AI Agent</span>
+      <span class="badge" id="status-badge">就绪</span>
+    </div>
+    <div class="actions">
+      <span class="session-id" id="session-id" title="会话 ID（存在浏览器本地）"></span>
+      <button class="btn ghost" id="btn-reset" title="清空上下文并重建 Agent">新会话</button>
+    </div>
+  </header>
+
+  <!-- 消息区 -->
+  <main class="stream" id="stream">
+    <div class="empty" id="empty">
+      <h1>Harness Engineer 的 Agent</h1>
+      <p>三层记忆 · 工具审批 · 知识检索 · 验证钩子 · 子 Agent 委派</p>
+      <div class="chips">
+        <button class="chip" data-prompt="读 README.md，用三句话总结这个项目">总结项目</button>
+        <button class="chip" data-prompt="统计 tests 目录下一共有多少个测试用例">统计测试</button>
+        <button class="chip" data-prompt="看看 agent/tools 目录下有哪些工具文件，各自实现什么">看工具集</button>
+        <button class="chip" data-prompt="在 docs 目录写一个 hello.md，内容是当前项目的一句话简介">写文件（会触发审批）</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 输入区 -->
+  <footer class="composer">
+    <div class="input-wrap">
+      <textarea id="input" rows="1" placeholder="说点什么…（Enter 发送，Shift+Enter 换行）"></textarea>
+      <button class="btn send" id="btn-send" title="发送">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M3.4 20.4 21 12 3.4 3.6 3.4 10.2 15.6 12 3.4 13.8z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+    <div class="hint" id="hint"></div>
+  </footer>
+
+</div>
+
+<!-- 工具调用卡片模板 -->
+<template id="tpl-tool">
+  <div class="tool">
+    <div class="tool-head">
+      <span class="tool-icon">⚙</span>
+      <span class="tool-name"></span>
+      <span class="tool-args"></span>
+      <span class="tool-state"></span>
+      <span class="tool-caret">▾</span>
+    </div>
+    <div class="tool-body">
+      <pre class="tool-out"></pre>
+    </div>
+  </div>
+</template>
+
+<!-- 审批卡片模板 -->
+<template id="tpl-approval">
+  <div class="approval">
+    <div class="approval-head">
+      <span class="approval-icon">🔐</span>
+      <span>需要批准</span>
+      <span class="approval-tool"></span>
+    </div>
+    <pre class="approval-args"></pre>
+    <div class="approval-actions">
+      <button class="btn approve">批准 <kbd>Y</kbd></button>
+      <button class="btn reject">拒绝 <kbd>N</kbd></button>
+    </div>
+    <div class="approval-result"></div>
+  </div>
+</template>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
